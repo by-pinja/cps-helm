@@ -1,0 +1,7 @@
+replicaCount: 1
+functionApp:
+  name: web
+image:
+  repository: eu.gcr.io/ptcs-docker-registry/cps-alerta-server
+  tag: latest-master
+  pullPolicy: IfNotPresent
