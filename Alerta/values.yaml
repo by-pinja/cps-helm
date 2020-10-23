@@ -1,7 +1,43 @@
 replicaCount: 1
-functionApp:
-  name: web
+
+
 image:
   repository: eu.gcr.io/ptcs-docker-registry/cps-alerta-server
   tag: latest-master
   pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ngress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - alerta.protacon.com
+  tls: []
+
+
+scale:
+  maxReplicas: 1
+  minReplicas: 1
+  cpuUtilizationPercentage: 50
+resources:
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # required for autoscale to work  (pass in values)
+  requests:
+    cpu: 100m
+
+postgresql:
+  enabled: true
+  postgresqlUsername: alerta
+  postgresqlDatabase: monitoring
+  postgresqlPassword: "changeme" # provide a password here, otherwise it will be randomly generated inside postgresql helm chart and will not be available as a variable in the alerta helm chart
+  persistence:
+    enabled: true
+    size: 10Gi
